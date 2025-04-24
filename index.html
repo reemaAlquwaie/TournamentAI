@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voice + Text Chatbot</title>
+</head>
+<body>
+  <h2>Ask the Bot</h2>
+
+  <form id="chat-form">
+    <label>Text Input:</label><br>
+    <input type="text" id="text-input" name="text"><br><br>
+
+    <label>Upload Audio (optional):</label><br>
+    <input type="file" id="audio-input" name="audio" accept="audio/*"><br><br>
+
+    <button type="submit">Send</button>
+  </form>
+
+  <h3>Response:</h3>
+  <pre id="response-output"></pre>
+
+  <script>
+    document.getElementById("chat-form").onsubmit = async function (e) {
+      e.preventDefault();
+
+      const text = document.getElementById("text-input").value;
+      const audio = document.getElementById("audio-input").files[0];
+
+      const formData = new FormData();
+      formData.append("text", text);
+      if (audio) formData.append("audio", audio);
+
+      const res = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      document.getElementById("response-output").innerText = data.text || "No response";
+    };
+  </script>
+</body>
+</html>
