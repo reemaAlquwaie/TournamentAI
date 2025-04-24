@@ -1,6 +1,6 @@
 from langchain.schema import SystemMessage
 from config.model import get_llm
-from agent.state import State
+from agent.state_schema import State
 llm = get_llm()
 def general(state: State):
 
