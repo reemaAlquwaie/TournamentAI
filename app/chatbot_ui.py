@@ -1,7 +1,6 @@
 import streamlit as st
 import sys
 import os
-from langfuse.callback import CallbackHandler
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -11,16 +10,16 @@ from agent.graph_builder import build_graph
 
 
 
-st.set_page_config(page_title="Stride Bot", layout="centered")
-st.title("Stride.Bot")
-st.markdown("Ask anything about leaves or project activities.")
+st.set_page_config(page_title="TournamentAi Bot", layout="centered")
+st.title("TournamentAi.Bot")
+st.markdown("Ask anything about booking a tickets.")
 
 
 if "agent" not in st.session_state:
     st.session_state.agent = build_graph()
 
 
-THREAD_ID = "demo-user-thread-54"  
+THREAD_ID = "demo1"  
 
 
 if "messages" not in st.session_state:
@@ -37,8 +36,6 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 
-
-# Chat input box
 user_input = st.chat_input("Type your message here...")
 
 if user_input:
@@ -57,10 +54,9 @@ if user_input:
                 state_input = {
                     "messages": [msg["content"] for msg in st.session_state.messages]
                 }
-                langfuse_handler = CallbackHandler()
                 response = st.session_state.agent.invoke(
                     state_input,
-                    config={"thread_id": THREAD_ID, "callbacks": [langfuse_handler]},
+                    config={"thread_id": THREAD_ID},
                 )
                 output = response.get("output", "No response from agent.")
             except Exception as e:
